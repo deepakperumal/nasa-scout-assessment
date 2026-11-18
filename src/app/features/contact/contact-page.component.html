@@ -1,0 +1,84 @@
+<div class="contact-page">
+  <div class="intro">
+    <p class="eyebrow">Reach Us</p>
+    <h1>Speak with Our Friendly Team</h1>
+    <p class="lead">We'd love to assist you. Fill out the form or drop us an email.</p>
+  </div>
+
+  <div class="main-grid">
+    <div class="channels">
+      @for (item of channels; track item.title) {
+        <div class="channel-card">
+          <div class="icon-wrap">
+            <i [class]="item.icon"></i>
+          </div>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.desc }}</p>
+            <a [href]="item.href">{{ item.linkText }}</a>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="form-card">
+      @if (submitted()) {
+        <div class="success">
+          <i class="pi pi-check-circle"></i>
+          <h3>Message sent</h3>
+          <p>Thanks for reaching out. We'll get back to you soon.</p>
+          <p-button label="Send another message" (onClick)="resetForm()" styleClass="p-button-outlined" />
+        </div>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="name-row">
+            <div class="field">
+              <label>First Name <span>*</span></label>
+              <input pInputText formControlName="firstName" placeholder="Your First Name" />
+            </div>
+            <div class="field">
+              <label>Last Name <span>*</span></label>
+              <input pInputText formControlName="lastName" placeholder="Your Last Name" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Email Address <span>*</span></label>
+            <input pInputText formControlName="email" placeholder="Your Email" type="email" />
+          </div>
+          <div class="field">
+            <label>Company</label>
+            <input pInputText formControlName="company" placeholder="Optional" />
+          </div>
+          <div class="field">
+            <label>Your Message <span>*</span></label>
+            <textarea pTextarea formControlName="message" rows="4" placeholder="How can we help you?"></textarea>
+          </div>
+          <div class="terms">
+            <p-checkbox formControlName="terms" [binary]="true" inputId="terms" />
+            <label for="terms">
+              I agree to the <a href="#">privacy policy</a> and <a href="#">terms of service</a>
+            </label>
+          </div>
+          <p-button type="submit" label="Submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" styleClass="w-full" />
+        </form>
+      }
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <div class="lower-panel">
+    <div>
+      <h4>Office Hours</h4>
+      <div class="info-row"><span>Monday – Friday</span><span>9:00 – 17:00</span></div>
+      <div class="info-row"><span>Saturday</span><span>10:00 – 14:00</span></div>
+      <div class="info-row"><span>Sunday</span><span>Closed</span></div>
+    </div>
+    <div>
+      <h4>Contact Information</h4>
+      <div class="info-row"><span>Email</span><span>hello@example.com</span></div>
+      <div class="info-row"><span>Phone</span><span>+1 (555) 123-4567</span></div>
+      <div class="info-row"><span>Address</span><span>1234 Street Name, City</span></div>
+    </div>
+  </div>
+</div>

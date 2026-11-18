@@ -1,0 +1,65 @@
+<div class="scout-page">
+  <div class="header">
+    <div>
+      <h1>NASA Scout Overview</h1>
+      <p class="subtitle">Near-Earth object candidates from JPL Scout</p>
+    </div>
+    <div class="actions">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText placeholder="Quick filter..." (input)="onQuickFilter($event)" />
+      </span>
+      <p-button label="Refresh" icon="pi pi-refresh" [loading]="store.loading()" (onClick)="store.refresh()" />
+    </div>
+  </div>
+
+  @if (store.loading() && !store.hasData()) {
+    <div class="state-center">
+      <p-progressSpinner />
+      <p>Loading Scout data...</p>
+    </div>
+  } @else if (store.error()) {
+    <div class="state-center error">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>{{ store.error() }}</p>
+      <p-button label="Retry" (onClick)="store.refresh()" />
+    </div>
+  } @else {
+    <ag-grid-angular
+      class="ag-theme-quartz grid"
+      [rowData]="store.candidates()"
+      [columnDefs]="colDefs"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="20"
+      [animateRows]="true"
+      (gridReady)="onGridReady($event)"
+      (rowClicked)="onRowClicked($event)"
+    />
+  }
+
+  <p-dialog
+    header="Candidate Details"
+    [(visible)]="detailsVisible"
+    [modal]="true"
+    [style]="{ width: '480px' }"
+    [draggable]="false"
+  >
+    @if (store.selected(); as c) {
+      <div class="details">
+        <div class="row"><span>Designation</span><strong>{{ c.objectName }}</strong></div>
+        <div class="row"><span>Magnitude (H)</span><strong>{{ c.H }}</strong></div>
+        <div class="row"><span>Observations</span><strong>{{ c.nObs }}</strong></div>
+        <div class="row"><span>Close Approach (LD)</span><strong>{{ c.caDist ?? '—' }}</strong></div>
+        <div class="row"><span>NEO Score</span><strong>{{ c.neoScore }}</strong></div>
+        <div class="row"><span>PHA Score</span><strong>{{ c.phaScore }}</strong></div>
+        <div class="row"><span>IEO Score</span><strong>{{ c.ieoScore }}</strong></div>
+        <div class="row"><span>Combined Hazard</span><strong>{{ store.hazardScore() }}</strong></div>
+        <div class="row"><span>Arc (days)</span><strong>{{ c.arc }}</strong></div>
+        <div class="row"><span>Last Run</span><strong>{{ c.lastRun }}</strong></div>
+        <div class="row"><span>MOID</span><strong>{{ c.moid }}</strong></div>
+        <div class="row"><span>Vmag</span><strong>{{ c.Vmag }}</strong></div>
+      </div>
+    }
+  </p-dialog>
+</div>
